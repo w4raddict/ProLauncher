@@ -24,7 +24,7 @@
 - [ ] Testing on Windows, Mac, Linux [0/3]
   - [ ] WINE only on Mac, Linux
   - [ ] Check if WINE is installed
-  - [ ] Information box: You must configure WINE, yourself!
+  - [ ] Information box: You must configure WINE and your GPU drivers, yourself!
 ** Project refactoring [0/1]
 - [ ] Manage mv.CurrentAcc properly
   
@@ -32,8 +32,8 @@
 - [X] Loads all accounts from the ~/.bsgoLauncher/Accounts/Accounts.json path
 - [ ] All logged-in accounts added automatically (if 'Save Login Data' is checked)
 - [X] Scrolling ability if too many accounts
-- [-] Per account: [0/5]
-  - [ ] Load (make active, -> icon)
+- [-] Per account: [1/5]
+  - [X] +Load (make active, -> icon)+ (unnecessary)
   - [-] Play [1/3]
     - [X] Basic implementtation
     - [ ] During play: Disable Button
@@ -47,7 +47,7 @@
     - [ ] change AccInfo
       
 ** Central Panel Properties [0/2]
-- [ ] Shows 'Save this account' in login/register formula, otherwise it will throw acc away.
+- [ ] Shows 'Save this account' in login/register formula, otherwise it throws acc away.
 ** TODO Debug [0/5]
 - [ ] Print Errors to console as well. (rather than 'just' errorbox)
 - [ ] Remove old functions
@@ -64,10 +64,58 @@
 - [ ] Account faction displayed as well, with Switch Faction button
 
 * Configuration
+** Windows
+If you're using Windows and you have problems running BSGO, go ask your grandma. I bet she knows more about computers than you do.
+** MacOS
+If you're using an ARM Mac, BSGO might not run properly.
+
+Make sure you have WINE installed. Recommendation: Install it through Homebrew.
+
 #+begin_src shell
-  # The following is for Ubuntu-based Linux distributions with an nvidia GPU
-  
-  # Add 32-bit support (required for BSGO)
+  brew install --cask wine
+  # A beautiful front-end for WINE.
+  brew install winetricks
+#+end_src
+
+** Linux
+*** A complete WINE installation
+As BSGO was developed for Windows, it requires an installation of WINE to run on your Linux machine.
+
+On Ubuntu-based distributions (e.g. Ubuntu, Linux Mint, Pop_OS, ElementaryOS, KDE Neon), paste this into your terminal:
+
+#+begin_src 
+# WINE
+sudo apt install winetricks
+sudo apt install winbind
+# 32 bit support
+sudo dpkg --add-architecture i386
+# equivalent of lib32-gnutils
+sudo apt-get install gnutls-bi
+# for wine-mono build
+sudo apt install libgdiplus
+sudo apt install dos2unix
+
+#+end_src
+
+On most machines, this is enough to get BSGO running on Linux.
+
+If the launcher finds a WINE installation on your computer [fn:1], it runs BSGO using WINE. Otherwise, you will receive an error message.
+
+*** Error: WINE doesn't know which drivers to load
+If you encounter problems with BSGO, it may be because WINE can't decide which drivers to load.
+
+If your Linux distribution supports GPU configuration, make sure to choose the most powerful GPU you have (usually the dedicated GPU if you have one), and reboot your system. *Avoid hybrid graphics mode*, as it might lead to problems.
+
+Also, make sure you have 32-bit architecture enabled, as it is disabled on most modern Linux systems by default. BSGO won't run without this option.
+
+If you're using an Ubuntu-based distribution, the following code might help you. Otherwise, find equivalent commands and packages for your Linux distribution.
+
+Paste the code into the terminal and reboot your system:
+
+#+begin_src shell
+  # The following is for Ubuntu-based Linux distributions with an nvidia GPU using proprietary Nvidia drivers.
+
+  # Enable 32-bit support (required for BSGO)
   sudo dpkg --add-architecture i386
 
   # download proprietary nvidia drivers
@@ -80,3 +128,7 @@
 #+ATTR_ORG: :width 100
 [[./Assets/test.png]]
 #  LocalWords:  BSGO LocalWords
+
+* Footnotes
+
+[fn:1] Make sure 'wine' is in your $PATH. You don't have to worry about that if you install WINE as shown above.
